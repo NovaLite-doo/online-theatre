@@ -1,4 +1,6 @@
 using Logic;
+using Logic.Repositories;
+using Logic.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<MovieRepository>();
+builder.Services.AddTransient<CustomerRepository>();
+builder.Services.AddTransient<MovieService>();
+builder.Services.AddTransient<CustomerService>();
+
 builder.Services.AddDbContext<OnlineTheatreDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 

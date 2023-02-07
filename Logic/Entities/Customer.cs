@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Logic.Entities;
 
@@ -13,6 +14,7 @@ public class Customer
     [RegularExpression(@"^(.+)@(.+)$", ErrorMessage = "Email is invalid")]
     public string Email { get; set; } = string.Empty;
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public CustomerStatus Status { get; set; }
     
     public DateTime? StatusExpirationDate { get; set; }

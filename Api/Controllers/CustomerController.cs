@@ -30,14 +30,14 @@ public class CustomerController : Controller
             return NotFound();
         }
 
-        return Ok(customer);
+        return Json(customer);
     }
 
     [HttpGet]
-    public IActionResult GetList()
+    public JsonResult GetList()
     {
         var customers = _customerRepository.GetList();
-        return Ok(customers);
+        return Json(customers);
     }
 
     [HttpPost]
