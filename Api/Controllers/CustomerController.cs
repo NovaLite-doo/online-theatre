@@ -87,7 +87,13 @@ public class CustomerController : Controller
                 return BadRequest("Email already in use");
             }
 
-            var customer = new Customer(item.Name, item.Email);
+            var customer = new Customer
+            {
+                Name = item.Name,
+                Email = item.Email,
+                MoneySpent = 0,
+                Status = CustomerStatus.Regular
+            };
             _customerRepository.Add(customer);
             _customerRepository.SaveChanges();
 

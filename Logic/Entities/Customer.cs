@@ -6,15 +6,6 @@ namespace Logic.Entities;
 
 public class Customer
 {
-    public Customer(string name, string email)
-    {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        Email = email ?? throw new ArgumentNullException(nameof(email));
-
-        MoneySpent = 0;
-        Status = CustomerStatus.Regular;
-    }
-
     [Required]
     [MaxLength(100, ErrorMessage = "Name is too long")]
     public string Name { get; set; } = string.Empty;
