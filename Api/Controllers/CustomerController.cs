@@ -1,3 +1,4 @@
+using Api.Customers;
 using Logic.Entities;
 using Logic.Repositories;
 using Logic.Services;
@@ -30,18 +31,49 @@ public class CustomerController : Controller
             return NotFound();
         }
 
-        return Json(customer);
+        var dto = new CustomerDto
+        {
+            Id = customer.Id,
+            Name = customer.Name,
+            Email = customer.Email,
+            MoneySpent = customer.MoneySpent,
+            Status = customer.Status.ToString(),
+            StatusExpirationDate = customer.StatusExpirationDate,
+            PurchasedMovies = customer.PurchasedMovies.Select(x => new PurchasedMovieDto
+            {
+                Price = x.Price,
+                ExpirationDate = x.ExpirationDate,
+                PurchaseDate = x.PurchaseDate,
+                Movie = new MovieDto
+                {
+                    Id = x.Movie.Id,
+                    Name = x.Movie.Name
+                }
+            }).ToList()
+        };
+        
+        return Json(dto);
     }
 
     [HttpGet]
     public JsonResult GetList()
     {
         var customers = _customerRepository.GetList();
-        return Json(customers);
+        var dtos = customers.Select(x => new CustomerInListDto
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Email = x.Email,
+            MoneySpent = x.MoneySpent,
+            Status = x.Status.ToString(),
+            StatusExpirationDate = x.StatusExpirationDate
+        }).ToList();
+        
+        return Json(dtos);
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Customer item)
+    public IActionResult Create([FromBody] CreateCustomerDto item)
     {
         try
         {
@@ -55,9 +87,8 @@ public class CustomerController : Controller
                 return BadRequest("Email already in use");
             }
 
-            item.Id = 0;
-            item.Status = CustomerStatus.Regular;
-            _customerRepository.Add(item);
+            var customer = new Customer(item.Name, item.Email);
+            _customerRepository.Add(customer);
             _customerRepository.SaveChanges();
 
             return Ok();
@@ -70,7 +101,7 @@ public class CustomerController : Controller
 
     [HttpPut]
     [Route("{id}")]
-    public IActionResult Update(long id, [FromBody] Customer item)
+    public IActionResult Update(long id, [FromBody] UpdateCustomerDto item)
     {
         try
         {
@@ -79,7 +110,7 @@ public class CustomerController : Controller
                 return BadRequest(ModelState);
             }
 
-            var customer = _customerRepository.GetById(item.Id);
+            var customer = _customerRepository.GetById(id);
             if (customer == null)
             {
                 return NotFound();
