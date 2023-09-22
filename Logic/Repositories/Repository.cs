@@ -2,21 +2,21 @@
 
 public abstract class Repository<T> where T : class
 {
-    protected readonly OnlineTheatreDbContext _context;
+    protected readonly OnlineTheatreDbContext Context;
 
     protected Repository(OnlineTheatreDbContext context)
     {
-        _context = context;
+        Context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public IReadOnlyList<T> GetList() => _context.Set<T>().ToList();
+    public IReadOnlyList<T> GetList() => Context.Set<T>().ToList();
 
-    public T? GetById(long id) => _context.Set<T>().Find(id);
+    public T? GetById(long id) => Context.Set<T>().Find(id);
 
     public void Add(T entity)
     {
-        _context.Set<T>().Add(entity);
+        Context.Set<T>().Add(entity);
     }
 
-    public void SaveChanges() => _context.SaveChanges();
+    public void SaveChanges() => Context.SaveChanges();
 }
