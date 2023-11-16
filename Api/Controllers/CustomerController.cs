@@ -190,7 +190,7 @@ public class CustomerController : Controller
             var success = _customerService.PromoteCustomer(customer);
             if (!success)
             {
-                return BadRequest("get fucked");
+                return BadRequest("Cannot promote customer");
             }
 
             _customerRepository.SaveChanges();
