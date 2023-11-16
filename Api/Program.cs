@@ -17,7 +17,7 @@ builder.Services.AddTransient<MovieService>();
 builder.Services.AddTransient<CustomerService>();
 
 builder.Services.AddDbContext<OnlineTheatreDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+    options.UseInMemoryDatabase("OnlineTheater"));
 
 var app = builder.Build();
 
